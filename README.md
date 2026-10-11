@@ -100,6 +100,13 @@ These cases were tested during workbook development.
 
 ## Limitations
 
-- The workbook represents a historical snapshot, not live shipment tracking.
-- Product details and shipment tracking URLs are absent from the source dataset.
-- No promised delivery dates or service-level targets are
+-The workbook represents a historical snapshot, not live shipment tracking.
+-Product details and shipment tracking URLs are absent from the source dataset.
+-No promised delivery dates or service-level targets are provided, so late-delivery rates cannot be calculated.
+-In Progress and Cancelled records also contain shipping dates. Their operational meaning requires clarification.
+
+Data Source
+
+Workintech challenge workbook:
+
+Challenge - Greenweez - parcel data dosyasının kopyası.xlsx
