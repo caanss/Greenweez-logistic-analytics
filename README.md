@@ -1,26 +1,31 @@
-# Greenweez-logistic-analytics
-Logistics analysis and parcel tracking with Google Sheets: delivery metrics, carrier performance, dashboards, and parcel lookup.
 # Greenweez Logistics Analytics
 
 A Google Sheets project developed as part of the Workintech **Logistics Data Analysis and Parcel Tracking** challenge.
 
-The project explores order processing times, carrier performance, cancellations, and parcel tracking using a historical dataset from 2021.
+This project explores order processing times, carrier performance, cancellations, and parcel tracking using a historical dataset from 2021.
 
 ## Dashboard
 
 [Open the Google Sheets analysis](https://docs.google.com/spreadsheets/d/1j7uZ3fsD378RecTBezfqxZ--kxIMJY5-5yhGuD_L2yU/edit?usp=sharing)
 
+To test the parcel lookup, make a personal copy of the workbook and enter a parcel ID in cell **B1** of the `parcel_info_page` sheet.
+
 ## Dataset
 
-The source workbook contains **4,199 orders**, four carriers, and three priority levels.
+The source workbook contains **4,199 unique orders**, **3,373 distinct parcel IDs**, four carriers, and three priority levels.
 
-Source fields:
-- `parcel_id` and `orders_id`
-- `carrier` and `Priority`
-- `purchase_date`, `shipping_date`, and `delivery_date`
-- `Status`
+| Field | Description |
+|---|---|
+| `parcel_id` | Parcel identifier; not unique in this dataset |
+| `orders_id` | Unique order identifier |
+| `carrier` | Shipping carrier and service |
+| `Priority` | High, Medium, or Low |
+| `purchase_date` | Purchase date |
+| `shipping_date` | Shipping date |
+| `delivery_date` | Delivery date; blank for undelivered orders |
+| `Status` | Delivered, In Transit, In Progress, or Cancelled |
 
-Order IDs are unique, but parcel IDs repeat. Counts therefore use `orders_id`, and the parcel lookup returns all records matching a parcel ID.
+Repeated parcel IDs can have different order details. These records were retained, and order counts use `orders_id`.
 
 ## Analysis
 
@@ -29,7 +34,7 @@ Order IDs are unique, but parcel IDs repeat. Counts therefore use `orders_id`, a
 - Compared cancellation rates and order shares across carriers.
 - Visualized order status distribution.
 - Analyzed in-transit orders by purchase date.
-- Built an interactive parcel lookup with a message for unmatched IDs.
+- Built a parcel lookup that returns all matching records.
 
 ## Metric Definitions
 
@@ -40,7 +45,7 @@ Order IDs are unique, but parcel IDs repeat. Counts therefore use `orders_id`, a
 | Total lead time | Delivery date − purchase date |
 | Cancellation rate | Cancelled orders ÷ total orders |
 
-Duration metrics use calendar days. Delivery and total lead-time averages include only records with a delivery date. Missing delivery dates are not replaced with zero.
+All durations use calendar days. Delivery and total lead-time averages include only records with a delivery date. Missing delivery dates are not replaced with zero.
 
 ## Key Findings
 
@@ -58,15 +63,43 @@ Duration metrics use calendar days. Delivery and total lead-time averages includ
 
 Shipping time averages cover all orders, while delivery and total lead-time averages cover delivered orders. These averages should not be added together because their populations differ.
 
-**Chrono Pickup** accounts for the largest order share at **52.1%**. **DPD Pickup** has the highest cancellation rate at **3.93%**, while **Chrono Home** has the lowest at **2.13%**. These descriptive differences do not establish the causes of cancellations.
+**Chrono Pickup** handles the largest order share at **52.1%**.
+
+| Carrier | Cancellation rate |
+|---|---:|
+| Chrono Home | 2.13% |
+| Chrono Pickup | 3.25% |
+| DPD Home | 3.25% |
+| DPD Pickup | 3.93% |
+
+DPD Pickup has the highest cancellation rate, while Chrono Home has the lowest. These descriptive differences do not establish the causes of cancellations.
 
 ## Parcel Lookup
 
-In the `parcel_info_page` sheet, enter a parcel ID in **B1** to display matching records.
+Enter a parcel ID in **B1** of the `parcel_info_page` sheet.
 
-Examples:
-- `1001` returns two records.
-- `1004` returns four records.
-- An unmatched ID displays a “parcel
+The lookup uses `FILTER` to return every matching record and `IFNA` to display a message when no match exists.
 
-- 
+| Test input | Expected result |
+|---|---|
+| `1001` | Two matching records |
+| `1004` | Four matching records |
+| `999999` | “Bu paket kimliği bulunamadı” message |
+
+These cases were tested during workbook development.
+
+## Tools and Skills
+
+- Google Sheets
+- Pivot tables and charts
+- Date calculations
+- Conditional formulas
+- `COUNTIF` for repeated-ID counts
+- `FILTER` and `IFNA` for parcel lookup
+- Data quality checks for missing values, duplicate IDs, and date order
+
+## Limitations
+
+- The workbook represents a historical snapshot, not live shipment tracking.
+- Product details and shipment tracking URLs are absent from the source dataset.
+- No promised delivery dates or service-level targets are
